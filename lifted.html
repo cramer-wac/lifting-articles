@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lifted</title>
+</head>
+
+<body>
+
+    <div id="root"></div>
+
+    <!-- include React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- include Babel standalone so we can process JSX -->
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- include our JS for the React Appliccation -->
+    <script type="text/babel">
+
+
+
+
+
+        // Stateless component
+        function Article(props) {
+
+
+            // conditional rendering
+
+            let readButton, likeButton
+
+            if (props.isRead === true) {
+                readButton = <button onClick={props.readHandle}>Mark Un-Read</button>
+            } else {
+                readButton = <button onClick={props.readHandle}>Mark Read</button>
+            }
+
+
+            return (
+                <div>
+                    <p>{props.content}</p>
+                    {readButton}
+                </div>
+            )
+
+        }
+
+        // a Two Article Page
+        class Page extends React.Component {
+            constructor(props) {
+                super(props);
+
+                this.state = {
+                    articleOne: {
+                        content: props.contentOne,
+                        isRead: false,
+                    },
+                    articleTwo: {
+                        content: props.contentTwo,
+                        isRead: false,
+                    }
+
+                }
+            }
+
+            handleReadClick = (article) => {
+
+                // there must be a better way to do this logic
+                // useing the article parameter
+                // something like
+                // if (state.[article].isRead === true) {
+                //             return {
+                //                 [article]: {
+                //                     content: state.articleOne.content,
+                //                     isRead: false
+                //                 }
+                //             }
+                //         } else {
+                //             return {
+                //                 [article]: {
+                //                     content: state.articleOne.content,
+                //                     isRead: true
+                //                 }
+                //             }
+                //         }
+                // maybe you know what will work
+                
+                if (article === 'articleOne') {
+                    this.setState((state, props) => {
+
+                        if (state.articleOne.isRead === true) {
+                            return {
+                                articleOne: {
+                                    content: state.articleOne.content,
+                                    isRead: false
+                                }
+                            }
+                        } else {
+                            return {
+                                articleOne: {
+                                    content: state.articleOne.content,
+                                    isRead: true
+                                }
+                            }
+                        }
+
+                    })
+
+                } else if (article === 'articleTwo') {
+
+                    this.setState((state, props) => {
+
+                        if (state.articleTwo.isRead === true) {
+                            return {
+                                articleTwo: {
+                                    content: state.articleTwo.content,
+                                    isRead: false
+                                }
+                            }
+                        } else {
+                            return {
+                                articleTwo: {
+                                    content: state.articleTwo.content,
+                                    isRead: true
+                                }
+                            }
+                        }
+
+                    })
+                }
+
+
+            }
+
+            render() {
+                return (
+                    <div>
+                        <Article
+                            content={this.state.articleOne.content}
+                            isRead={this.state.articleOne.isRead}
+                            readHandle={() => this.handleReadClick('articleOne')}
+                        />
+                        <Article
+                            content={this.state.articleTwo.content}
+                            isRead={this.state.articleTwo.isRead}
+                            readHandle={() => this.handleReadClick('articleTwo')}
+                        />
+                    </div>
+                )
+
+            }
+
+        }
+
+
+        // Deafault App component that all other compents are rendered through
+        function App(props) {
+            return (
+                <div>
+                    <Page
+                        contentOne="Some Stuff"
+                        contentTwo="Some Other Stuff"
+                    />
+                </div>
+            )
+        }
+
+        //Render the application
+        ReactDOM.render(
+            <App />,
+            document.getElementById('root')
+        );
+
+    </script>
+</body>
+
+</html>

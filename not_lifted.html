@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notL</title>
+</head>
+
+<body>
+
+    <div id="root"></div>
+
+    <!-- include React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- include Babel standalone so we can process JSX -->
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- include our JS for the React Appliccation -->
+    <script type="text/babel">
+
+        // stateful component
+        class Article extends React.Component {
+            constructor(props) {
+                super(props)
+
+                this.state = {
+                    content: props.content,
+                    isRead: false,
+                    isLike: false,
+                }
+            }
+
+            handleReadClick = () => {
+
+                this.setState((state, props) => {
+                    if (state.isRead === true) {
+                        return { isRead: false }
+                    } else {
+                        return { isRead: true }
+                    }
+
+                })
+            }
+
+            render() {
+
+                // conditional rendering
+
+                let readButton, likeButton
+
+                if (this.state.isRead === true) {
+                    readButton = <button onClick={this.handleReadClick}>Mark Un-Read</button>
+                } else {
+                    readButton = <button onClick={this.handleReadClick}>Mark Read</button>
+                }
+
+
+                return (
+                    <div>
+                        <p>{this.state.content}</p>
+                        {readButton}
+                    </div>
+                )
+            }
+        }
+
+
+        // Deafault App component that all other compents are rendered through
+        function App(props) {
+            return (
+                <div>
+                    <Article content="Some Stuff" />
+                    <Article content="Some Other Stuff" />
+                </div>
+            )
+        }
+
+        //Render the application
+        ReactDOM.render(
+            <App />,
+            document.getElementById('root')
+        );
+
+    </script>
+</body>
+
+</html>
